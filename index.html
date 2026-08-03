@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KdF Longsword Drill Generator</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background: #121212; color: #e0e0e0; padding: 20px; max-width: 600px; margin: 0 auto; }
+        .card { background: #1e1e1e; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); margin-top: 20px; }
+        h1 { text-align: center; color: #ff9800; font-size: 1.6rem; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        select, button { width: 100%; padding: 12px; margin-top: 8px; border-radius: 6px; border: none; font-size: 1rem; }
+        select { background: #2c2c2c; color: white; }
+        button { background: #ff9800; color: #121212; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        button:hover { background: #e68a00; }
+        .metric { font-size: 1.1rem; margin: 8px 0; padding: 8px; background: #2c2c2c; border-left: 4px solid #ff9800; border-radius: 4px; }
+        .step-item { background: #252525; padding: 10px; margin: 8px 0; border-radius: 4px; }
+        .highlight { color: #ff9800; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>⚔️ KdF Drill Generator</h1>
+
+    <label for="difficulty">Focus / Difficulty:</label>
+    <select id="difficulty">
+        <option value="basic">Basic Cuts Only</option>
+        <option value="mixed" selected>Mixed (Basic + Mastercuts)</option>
+        <option value="advanced">Advanced (Mastercuts Focus)</option>
+    </select>
+
+    <label for="steps">Sequence Length (Steps):</label>
+    <select id="steps">
+        <option value="2">2 Steps</option>
+        <option value="3" selected>3 Steps</option>
+        <option value="4">4 Steps</option>
+        <option value="5">5 Steps</option>
+    </select>
+
+    <button onclick="generateDrill()">🎲 Generate Drill</button>
+
+    <div id="drillOutput" class="card" style="display:none;">
+        <div class="metric">📍 <strong>Start Guard:</strong> <span id="startGuard" class="highlight"></span></div>
+        <div class="metric">🎯 <strong>Tactical Focus:</strong> <span id="tacticalFocus" class="highlight"></span></div>
+        
+        <h3>Sequence:</h3>
+        <div id="sequenceList"></div>
+        
+        <div class="metric" style="margin-top:15px;">🛡️ <strong>End Guard:</strong> <span id="endGuard" class="highlight"></span></div>
+    </div>
+
+    <script>
+        const GUARDS = ["Vom Tag (Right)", "Vom Tag (Left)", "Pflug (Right)", "Pflug (Left)", "Ochs (Right)", "Ochs (Left)", "Alber", "Nebenhut", "Zornhut"];
+        const MASTERCUTS = ["Zornhau", "Krumphau", "Zwerchau", "Schielhau", "Scheitelhau"];
+        const BASIC_STRIKES = ["Oberhau", "Unterhau", "Mittelhau", "Stich"];
+        const FOOTWORK = ["Passing Step Forward", "Gathering Step Forward", "Compass Step Outward", "Passing Step Backward", "Explosive Step"];
+        const OPENINGS = ["High Right", "High Left", "Low Right", "Low Left", "Center / Throat"];
+        const TACTICS = ["Vor (Initiative)", "Indes (Simultaneous)", "Nach (Reactive)"];
+
+        function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        function generateDrill() {
+            const diff = document.getElementById("difficulty").value;
+            const count = parseInt(document.getElementById("steps").value);
+
+            document.getElementById("startGuard").innerText = getRandom(GUARDS);
+            document.getElementById("tacticalFocus").innerText = getRandom(TACTICS);
+            document.getElementById("endGuard").innerText = getRandom(GUARDS);
+
+            const seqList = document.getElementById("sequenceList");
+            seqList.innerHTML = "";
+
+            for (let i = 0; i < count; i++) {
+                let strike;
+                if (diff === "basic") strike = getRandom(BASIC_STRIKES);
+                else if (diff === "advanced" && Math.random() > 0.2) strike = getRandom(MASTERCUTS);
+                else strike = getRandom([...BASIC_STRIKES, ...MASTERCUTS]);
+
+                const div = document.createElement("div");
+                div.className = "step-item";
+                div.innerHTML = `<strong>Step ${i+1}:</strong> ${getRandom(FOOTWORK)} ➔ <span class="highlight">${strike}</span> targeting <em>${getRandom(OPENINGS)}</em>`;
+                seqList.appendChild(div);
+            }
+
+            document.getElementById("drillOutput").style.display = "block";
+        }
+    </script>
+</body>
+</html>
