@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KdF Longsword Drill Generator</title>
+    <title>KdF Creative Drill Prompt Generator</title>
     <style>
         :root {
             --bg-color: #121212;
@@ -23,11 +23,11 @@
         }
 
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background: var(--bg-color); 
             color: var(--text-main); 
-            padding: 20px 15px; 
-            max-width: 650px; 
+            padding: 25px 15px; 
+            max-width: 500px; 
             margin: 0 auto; 
             line-height: 1.5;
         }
@@ -39,12 +39,8 @@
 
         h1 { 
             color: var(--accent); 
-            font-size: 1.8rem; 
+            font-size: 1.7rem; 
             margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
         }
 
         .subtitle {
@@ -54,52 +50,18 @@
 
         .card { 
             background: var(--card-bg); 
-            border-radius: 10px; 
-            padding: 20px; 
+            border-radius: 12px; 
+            padding: 24px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
             border: 1px solid var(--border-color);
-            margin-top: 20px; 
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label { 
-            display: block; 
-            margin-bottom: 6px; 
-            font-weight: 600; 
-            font-size: 0.95rem;
-        }
-
-        select { 
-            width: 100%; 
-            padding: 12px; 
-            border-radius: 6px; 
-            border: 1px solid var(--border-color); 
-            font-size: 1rem; 
-            background: var(--input-bg); 
-            color: white; 
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        select:focus {
-            border-color: var(--accent);
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
         }
 
         button { 
-            flex: 2;
-            padding: 12px; 
-            border-radius: 6px; 
+            width: 100%;
+            padding: 14px; 
+            border-radius: 8px; 
             border: none; 
-            font-size: 1rem; 
+            font-size: 1.1rem; 
             background: var(--accent); 
             color: #121212; 
             font-weight: 700; 
@@ -115,428 +77,157 @@
             transform: scale(0.98);
         }
 
-        button.btn-secondary {
-            flex: 1;
-            background: var(--input-bg);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-        }
-
-        button.btn-secondary:hover {
-            background: #383838;
-        }
-
-        .metric { 
-            font-size: 1rem; 
-            margin: 10px 0; 
-            padding: 10px 12px; 
-            background: var(--input-bg); 
-            border-left: 4px solid var(--accent); 
-            border-radius: 4px; 
+        .prompt-container {
+            margin-top: 25px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .step-item { 
-            background: #252525; 
-            padding: 12px 14px; 
-            margin: 10px 0; 
-            border-radius: 6px; 
-            border: 1px solid #303030;
+        .prompt-box {
+            background: #252525;
+            border: 1px solid #333;
+            border-left: 5px solid var(--accent);
+            border-radius: 8px;
+            padding: 14px 16px;
         }
 
-        .step-header {
-            font-size: 0.85rem;
-            color: var(--accent);
+        .prompt-label {
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
             font-weight: 700;
             margin-bottom: 4px;
         }
 
-        .highlight { 
-            color: var(--accent); 
-            font-weight: 600; 
+        .prompt-value {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .challenge-note {
+            margin-top: 20px;
+            padding: 12px;
+            background: rgba(255, 152, 0, 0.08);
+            border: 1px dashed var(--accent);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.88rem;
+            text-align: center;
         }
 
         .copy-btn {
-            width: 100%;
             margin-top: 15px;
             background: transparent;
-            border: 1px solid var(--accent);
-            color: var(--accent);
-        }
-
-        .copy-btn:hover {
-            background: rgba(255, 152, 0, 0.1);
-        }
-
-        h3 {
-            margin-top: 20px;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 5px;
-        }
-
-        /* Canvas styling for diagram */
-        #diagramContainer {
-            margin-top: 15px;
-            text-align: center;
-            background: #181818;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
             padding: 10px;
         }
 
-        canvas {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
-
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            font-size: 0.8rem;
-            margin-top: 8px;
-            color: var(--text-muted);
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
+        .copy-btn:hover {
+            background: var(--input-bg);
+            color: var(--text-main);
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>⚔️ KdF Drill Generator</h1>
-        <p class="subtitle">Kunst des Fechtens • Dynamic Solo Sequence Engine</p>
+        <h1>⚔️ KdF Prompt Generator</h1>
+        <p class="subtitle">Random constraints for creative solo drills</p>
     </div>
 
     <div class="card">
-        <div class="form-group">
-            <label for="difficulty">Focus / Difficulty:</label>
-            <select id="difficulty">
-                <option value="basic">Basic Cuts Only (Grundhau & Stiche)</option>
-                <option value="mixed" selected>Mixed (Basic + Mastercuts)</option>
-                <option value="advanced">Advanced (Meisterhau Focus)</option>
-            </select>
-        </div>
+        <button onclick="generatePrompt()">🎲 Generate Creative Prompt</button>
 
-        <div class="form-group">
-            <label for="steps">Sequence Length (Steps):</label>
-            <select id="steps">
-                <option value="2">2 Steps</option>
-                <option value="3" selected>3 Steps</option>
-                <option value="4">4 Steps</option>
-                <option value="5">5 Steps</option>
-            </select>
-        </div>
+        <div id="output" style="display: none;">
+            <div class="prompt-container">
+                <div class="prompt-box">
+                    <div class="prompt-label">1. Starting Stance</div>
+                    <div class="prompt-value" id="stanceVal">-</div>
+                </div>
 
-        <div class="btn-group">
-            <button onclick="generateDrill()">🎲 Generate Drill</button>
-            <button class="btn-secondary" onclick="resetDrill()">Reset</button>
-        </div>
-    </div>
+                <div class="prompt-box">
+                    <div class="prompt-label">2. Required Footwork</div>
+                    <div class="prompt-value" id="footworkVal">-</div>
+                </div>
 
-    <div id="drillOutput" class="card" style="display:none;">
-        <div class="metric">
-            <span>📍 <strong>Start Guard:</strong></span>
-            <span id="startGuard" class="highlight"></span>
-        </div>
-        <div class="metric">
-            <span>🎯 <strong>Tactical Tempo:</strong></span>
-            <span id="tacticalFocus" class="highlight"></span>
-        </div>
-        
-        <h3>Footwork Diagram</h3>
-        <div id="diagramContainer">
-            <canvas id="footworkCanvas" width="400" height="380"></canvas>
-            <div class="legend">
-                <div class="legend-item"><div class="legend-dot" style="background:#ff9800;"></div> Right Foot</div>
-                <div class="legend-item"><div class="legend-dot" style="background:#2196f3;"></div> Left Foot</div>
-                <div class="legend-item"><div class="legend-dot" style="background:#4caf50;"></div> Opponent Direction (Up)</div>
+                <div class="prompt-box">
+                    <div class="prompt-label">3. Core Strike / Technique</div>
+                    <div class="prompt-value" id="strikeVal">-</div>
+                </div>
             </div>
-        </div>
 
-        <h3>Sequence</h3>
-        <div id="sequenceList"></div>
-        
-        <div class="metric" style="margin-top:15px;">
-            <span>🛡️ <strong>End Guard:</strong></span>
-            <span id="endGuard" class="highlight"></span>
-        </div>
+            <div class="challenge-note">
+                💡 <strong>Your Creative Goal:</strong> Build a practical 2-to-4 step flow around these three requirements!
+            </div>
 
-        <button class="copy-btn" onclick="copyDrill()">📋 Copy Drill to Clipboard</button>
+            <button class="copy-btn" onclick="copyPrompt()">📋 Copy Prompt</button>
+        </div>
     </div>
 
     <script>
-        const GUARDS = {
-            "Vom Tag (Right)": { side: "R", level: "high" },
-            "Vom Tag (Left)": { side: "L", level: "high" },
-            "Pflug (Right)": { side: "R", level: "low" },
-            "Pflug (Left)": { side: "L", level: "low" },
-            "Ochs (Right)": { side: "R", level: "high" },
-            "Ochs (Left)": { side: "L", level: "low" },
-            "Alber": { side: "C", level: "low" },
-            "Nebenhut (Right)": { side: "R", level: "low" },
-            "Nebenhut (Left)": { side: "L", level: "low" },
-            "Zornhut (Right)": { side: "R", level: "high" }
-        };
-
-        const STRIKES = {
-            "Oberhau": { validOpenings: ["High Right", "High Left"], endLevel: "low" },
-            "Unterhau": { validOpenings: ["Low Right", "Low Left"], endLevel: "high" },
-            "Mittelhau": { validOpenings: ["High Right", "High Left"], endLevel: "same" },
-            "Stich": { validOpenings: ["Center / Throat"], endLevel: "same" },
-            "Zornhau": { validOpenings: ["High Left", "Center / Throat"], endLevel: "low" },
-            "Krumphau": { validOpenings: ["Low Right", "Hands"], endLevel: "low" },
-            "Zwerchau": { validOpenings: ["High Right", "High Left"], endLevel: "high" },
-            "Schielhau": { validOpenings: ["High Right", "Center / Throat"], endLevel: "high" },
-            "Scheitelhau": { validOpenings: ["Crown / Scalp"], endLevel: "low" }
-        };
-
-        const TACTICS = [
-            "Vor (Initiative / Aggressive)", 
-            "Indes (Simultaneous / Intercepting)", 
-            "Nach (Reactive / Counter-Attack)"
+        const STANCES = [
+            "Vom Tag (Right / High Guard)",
+            "Vom Tag (Left / High Guard)",
+            "Pflug (Right / Plow)",
+            "Pflug (Left / Plow)",
+            "Ochs (Right / Ox)",
+            "Ochs (Left / Ox)",
+            "Alber (Fool's Guard)",
+            "Nebenhut (Right / Tail)",
+            "Nebenhut (Left / Tail)",
+            "Zornhut (Wrath Guard)"
         ];
 
-        function getRandom(arr) { 
-            return arr[Math.floor(Math.random() * arr.length)]; 
+        const FOOTWORK = [
+            "Passing Step Forward",
+            "Passing Step Backward",
+            "Gathering Step Forward",
+            "Compass Step Outward (Off-Line)",
+            "Triangle Step Left",
+            "Triangle Step Right",
+            "Explosive Sprint / Lunging Step"
+        ];
+
+        const STRIKES = [
+            "Zornhau (Wrath Cut)",
+            "Krumphau (Crooked Cut)",
+            "Zwerchau (Thwart Cut)",
+            "Schielhau (Squinting Cut)",
+            "Scheitelhau (Scalp Cut)",
+            "Oberhau (High Cut)",
+            "Unterhau (Low Cut)",
+            "Mittelhau (Horizontal Cut)",
+            "Stich (Thrust)"
+        ];
+
+        function getRandom(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
         }
 
-        function getBiomechanicalNextGuard(currentGuardKey, strikeKey) {
-            const current = GUARDS[currentGuardKey] || { side: "R", level: "high" };
-            const strike = STRIKES[strikeKey];
-            const nextSide = current.side === "R" ? "L" : (current.side === "L" ? "R" : getRandom(["R", "L"]));
-            let nextLevel = strike ? strike.endLevel : "high";
-            if (nextLevel === "same") nextLevel = current.level;
+        function generatePrompt() {
+            document.getElementById("stanceVal").innerText = getRandom(STANCES);
+            document.getElementById("footworkVal").innerText = getRandom(FOOTWORK);
+            document.getElementById("strikeVal").innerText = getRandom(STRIKES);
 
-            const suitableGuards = Object.keys(GUARDS).filter(gKey => {
-                const g = GUARDS[gKey];
-                return (g.side === nextSide || g.side === "C") && g.level === nextLevel;
-            });
-
-            return suitableGuards.length > 0 ? getRandom(suitableGuards) : getRandom(Object.keys(GUARDS));
+            document.getElementById("output").style.display = "block";
         }
 
-        function generateDrill() {
-            const diff = document.getElementById("difficulty").value;
-            const count = parseInt(document.getElementById("steps").value);
+        function copyPrompt() {
+            const stance = document.getElementById("stanceVal").innerText;
+            const footwork = document.getElementById("footworkVal").innerText;
+            const strike = document.getElementById("strikeVal").innerText;
 
-            let currentGuard = getRandom(Object.keys(GUARDS));
-            const startGuard = currentGuard;
-            const tactic = getRandom(TACTICS);
-
-            document.getElementById("startGuard").innerText = startGuard;
-            document.getElementById("tacticalFocus").innerText = tactic;
-
-            const seqList = document.getElementById("sequenceList");
-            seqList.innerHTML = "";
-
-            const basicKeys = ["Oberhau", "Unterhau", "Mittelhau", "Stich"];
-            const masterKeys = ["Zornhau", "Krumphau", "Zwerchau", "Schielhau", "Scheitelhau"];
-
-            // Track foot positions for drawing diagram: coordinates (x, y) relative to canvas center
-            let leadingFoot = GUARDS[startGuard].side === "L" ? "L" : "R";
-            let footData = []; // Array of step steps
-
-            // Initial stance positions
-            let leftFoot = { x: -20, y: 300 };
-            let rightFoot = { x: 20, y: 300 };
-
-            if (leadingFoot === "R") {
-                rightFoot.y -= 30; // Right foot ahead
-            } else {
-                leftFoot.y -= 30; // Left foot ahead
-            }
-
-            footData.push({ stepNum: 0, left: { ...leftFoot }, right: { ...rightFoot }, movedFoot: "START" });
-
-            const footworkTypes = ["Passing Step Forward", "Gathering Step Forward", "Compass Step Outward", "Triangle Step Off-Line", "Withdrawal Step"];
-
-            for (let i = 0; i < count; i++) {
-                let strikeKey;
-                if (diff === "basic") strikeKey = getRandom(basicKeys);
-                else if (diff === "advanced") strikeKey = Math.random() > 0.25 ? getRandom(masterKeys) : getRandom(basicKeys);
-                else strikeKey = getRandom([...basicKeys, ...masterKeys]);
-
-                const strikeData = STRIKES[strikeKey];
-                const targetOpening = getRandom(strikeData.validOpenings);
-                const footwork = getRandom(footworkTypes);
-
-                // Calculate next foot position visually
-                let movedFoot = "R";
-                if (footwork.includes("Passing")) {
-                    movedFoot = leadingFoot === "R" ? "L" : "R";
-                    leadingFoot = movedFoot;
-                    if (movedFoot === "R") rightFoot.y = leftFoot.y - 40;
-                    else leftFoot.y = rightFoot.y - 40;
-                } else if (footwork.includes("Compass") || footwork.includes("Triangle")) {
-                    movedFoot = leadingFoot === "R" ? "R" : "L";
-                    const xOffset = (Math.random() > 0.5 ? 1 : -1) * 35;
-                    if (movedFoot === "R") { rightFoot.x += xOffset; rightFoot.y -= 25; }
-                    else { leftFoot.x += xOffset; leftFoot.y -= 25; }
-                } else if (footwork.includes("Gathering")) {
-                    movedFoot = leadingFoot === "R" ? "L" : "R";
-                    if (movedFoot === "R") rightFoot.y = leftFoot.y - 15;
-                    else leftFoot.y = rightFoot.y - 15;
-                } else { // Withdrawal
-                    movedFoot = leadingFoot;
-                    if (movedFoot === "R") rightFoot.y += 35;
-                    else leftFoot.y += 35;
-                }
-
-                footData.push({ stepNum: i + 1, left: { ...leftFoot }, right: { ...rightFoot }, movedFoot: movedFoot, strike: strikeKey });
-
-                const div = document.createElement("div");
-                div.className = "step-item";
-                div.innerHTML = `
-                    <div class="step-header">Step ${i+1}</div>
-                    <div>${footwork} ➔ <span class="highlight">${strikeKey}</span> targeting <em>${targetOpening}</em></div>
-                `;
-                seqList.appendChild(div);
-
-                currentGuard = getBiomechanicalNextGuard(currentGuard, strikeKey);
-            }
-
-            document.getElementById("endGuard").innerText = currentGuard;
-            document.getElementById("drillOutput").style.display = "block";
-
-            // Draw diagram
-            drawFootworkDiagram(footData);
-        }
-
-        function drawFootworkDiagram(steps) {
-            const canvas = document.getElementById("footworkCanvas");
-            const ctx = canvas.getContext("2d");
-
-            // Clear background
-            ctx.fillStyle = "#181818";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Draw floor grid lines
-            ctx.strokeStyle = "#282828";
-            ctx.lineWidth = 1;
-            for (let x = 0; x <= canvas.width; x += 40) {
-                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-            }
-            for (let y = 0; y <= canvas.height; y += 40) {
-                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
-            }
-
-            // Target direction arrow (Facing Opponent Upward)
-            ctx.strokeStyle = "#4caf50";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(200, 30);
-            ctx.lineTo(200, 10);
-            ctx.lineTo(195, 18);
-            ctx.moveTo(200, 10);
-            ctx.lineTo(205, 18);
-            ctx.stroke();
-
-            ctx.fillStyle = "#4caf50";
-            ctx.font = "10px sans-serif";
-            ctx.textAlign = "center";
-            ctx.fillText("OPPONENT", 200, 42);
-
-            const centerX = canvas.width / 2;
-
-            // Draw movement path connections
-            ctx.lineWidth = 2;
-            ctx.setLineDash([4, 4]);
-            for (let i = 1; i < steps.length; i++) {
-                const prev = steps[i - 1];
-                const curr = steps[i];
-                ctx.strokeStyle = curr.movedFoot === "R" ? "rgba(255, 152, 0, 0.5)" : "rgba(33, 150, 243, 0.5)";
-
-                ctx.beginPath();
-                if (curr.movedFoot === "R") {
-                    ctx.moveTo(centerX + prev.right.x, prev.right.y);
-                    ctx.lineTo(centerX + curr.right.x, curr.right.y);
-                } else {
-                    ctx.moveTo(centerX + prev.left.x, prev.left.y);
-                    ctx.lineTo(centerX + curr.left.x, curr.left.y);
-                }
-                ctx.stroke();
-            }
-            ctx.setLineDash([]); // Reset dash
-
-            // Draw foot icons for each step
-            steps.forEach((s, idx) => {
-                const alpha = idx === 0 ? 0.4 : 0.2 + (idx / steps.length) * 0.8;
-                
-                // Left Foot
-                drawFoot(ctx, centerX + s.left.x, s.left.y, "L", alpha, s.movedFoot === "L" ? idx : null);
-                // Right Foot
-                drawFoot(ctx, centerX + s.right.x, s.right.y, "R", alpha, s.movedFoot === "R" ? idx : null);
-            });
-        }
-
-        function drawFoot(ctx, x, y, side, opacity, stepLabel) {
-            ctx.save();
-            ctx.translate(x, y);
-
-            // Foot Capsule
-            ctx.fillStyle = side === "R" ? `rgba(255, 152, 0, ${opacity})` : `rgba(33, 150, 243, ${opacity})`;
-            ctx.strokeStyle = side === "R" ? "#ff9800" : "#2196f3";
-            ctx.lineWidth = 1.5;
-
-            ctx.beginPath();
-            ctx.ellipse(0, 0, 8, 16, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-
-            // Label step number inside moving foot
-            if (stepLabel !== null && stepLabel !== undefined) {
-                ctx.fillStyle = "#ffffff";
-                ctx.font = "bold 10px sans-serif";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                ctx.fillText(stepLabel === 0 ? "S" : stepLabel, 0, 0);
-            }
-
-            ctx.restore();
-        }
-
-        function resetDrill() {
-            document.getElementById("drillOutput").style.display = "none";
-            document.getElementById("difficulty").value = "mixed";
-            document.getElementById("steps").value = "3";
-        }
-
-        function copyDrill() {
-            const start = document.getElementById("startGuard").innerText;
-            const tempo = document.getElementById("tacticalFocus").innerText;
-            const end = document.getElementById("endGuard").innerText;
-            
-            const steps = [];
-            document.querySelectorAll(".step-item").forEach((el, index) => {
-                steps.push(`${index + 1}. ${el.innerText.replace(`STEP ${index + 1}\n`, '')}`);
-            });
-
-            const text = `⚔️ KdF Longsword Drill\n-------------------\n📍 Start: ${start}\n🎯 Tempo: ${tempo}\n\nSequence:\n${steps.join('\n')}\n\n🛡️ End: ${end}`;
+            const text = `⚔️ KdF Creative Prompt\n• Stance: ${stance}\n• Footwork: ${footwork}\n• Strike: ${strike}`;
 
             navigator.clipboard.writeText(text).then(() => {
                 const btn = document.querySelector(".copy-btn");
-                const originalText = btn.innerText;
                 btn.innerText = "✅ Copied!";
-                setTimeout(() => btn.innerText = originalText, 2000);
+                setTimeout(() => btn.innerText = "📋 Copy Prompt", 2000);
             });
         }
     </script>
