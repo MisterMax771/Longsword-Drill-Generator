@@ -5,84 +5,381 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KdF Longsword Drill Generator</title>
     <style>
-        body { font-family: system-ui, sans-serif; background: #121212; color: #e0e0e0; padding: 20px; max-width: 600px; margin: 0 auto; }
-        .card { background: #1e1e1e; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); margin-top: 20px; }
-        h1 { text-align: center; color: #ff9800; font-size: 1.6rem; }
-        label { display: block; margin-top: 10px; font-weight: bold; }
-        select, button { width: 100%; padding: 12px; margin-top: 8px; border-radius: 6px; border: none; font-size: 1rem; }
-        select { background: #2c2c2c; color: white; }
-        button { background: #ff9800; color: #121212; font-weight: bold; cursor: pointer; margin-top: 20px; }
-        button:hover { background: #e68a00; }
-        .metric { font-size: 1.1rem; margin: 8px 0; padding: 8px; background: #2c2c2c; border-left: 4px solid #ff9800; border-radius: 4px; }
-        .step-item { background: #252525; padding: 10px; margin: 8px 0; border-radius: 4px; }
-        .highlight { color: #ff9800; font-weight: bold; }
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --input-bg: #2c2c2c;
+            --accent: #ff9800;
+            --accent-hover: #e68a00;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background: var(--bg-color); 
+            color: var(--text-main); 
+            padding: 20px 15px; 
+            max-width: 650px; 
+            margin: 0 auto; 
+            line-height: 1.5;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 { 
+            color: var(--accent); 
+            font-size: 1.8rem; 
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .card { 
+            background: var(--card-bg); 
+            border-radius: 10px; 
+            padding: 20px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
+            border: 1px solid var(--border-color);
+            margin-top: 20px; 
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label { 
+            display: block; 
+            margin-bottom: 6px; 
+            font-weight: 600; 
+            font-size: 0.95rem;
+        }
+
+        select { 
+            width: 100%; 
+            padding: 12px; 
+            border-radius: 6px; 
+            border: 1px solid var(--border-color); 
+            font-size: 1rem; 
+            background: var(--input-bg); 
+            color: white; 
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            border-color: var(--accent);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button { 
+            flex: 2;
+            padding: 12px; 
+            border-radius: 6px; 
+            border: none; 
+            font-size: 1rem; 
+            background: var(--accent); 
+            color: #121212; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        button:hover { 
+            background: var(--accent-hover); 
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button.btn-secondary {
+            flex: 1;
+            background: var(--input-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        button.btn-secondary:hover {
+            background: #383838;
+        }
+
+        .metric { 
+            font-size: 1rem; 
+            margin: 10px 0; 
+            padding: 10px 12px; 
+            background: var(--input-bg); 
+            border-left: 4px solid var(--accent); 
+            border-radius: 4px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .step-item { 
+            background: #252525; 
+            padding: 12px 14px; 
+            margin: 10px 0; 
+            border-radius: 6px; 
+            border: 1px solid #303030;
+        }
+
+        .step-header {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .highlight { 
+            color: var(--accent); 
+            font-weight: 600; 
+        }
+
+        .copy-btn {
+            width: 100%;
+            margin-top: 15px;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 152, 0, 0.1);
+        }
+
+        h3 {
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
     </style>
 </head>
 <body>
 
-    <h1>⚔️ KdF Drill Generator</h1>
+    <div class="header">
+        <h1>⚔️ KdF Drill Generator</h1>
+        <p class="subtitle">Kunst des Fechtens • Dynamic Solo Sequence Engine</p>
+    </div>
 
-    <label for="difficulty">Focus / Difficulty:</label>
-    <select id="difficulty">
-        <option value="basic">Basic Cuts Only</option>
-        <option value="mixed" selected>Mixed (Basic + Mastercuts)</option>
-        <option value="advanced">Advanced (Mastercuts Focus)</option>
-    </select>
+    <div class="card">
+        <div class="form-group">
+            <label for="difficulty">Focus / Difficulty:</label>
+            <select id="difficulty">
+                <option value="basic">Basic Cuts Only (Grundhau & Stiche)</option>
+                <option value="mixed" selected>Mixed (Basic + Mastercuts)</option>
+                <option value="advanced">Advanced (Meisterhau Focus)</option>
+            </select>
+        </div>
 
-    <label for="steps">Sequence Length (Steps):</label>
-    <select id="steps">
-        <option value="2">2 Steps</option>
-        <option value="3" selected>3 Steps</option>
-        <option value="4">4 Steps</option>
-        <option value="5">5 Steps</option>
-    </select>
+        <div class="form-group">
+            <label for="steps">Sequence Length (Steps):</label>
+            <select id="steps">
+                <option value="2">2 Steps</option>
+                <option value="3" selected>3 Steps</option>
+                <option value="4">4 Steps</option>
+                <option value="5">5 Steps</option>
+            </select>
+        </div>
 
-    <button onclick="generateDrill()">🎲 Generate Drill</button>
+        <div class="btn-group">
+            <button onclick="generateDrill()">🎲 Generate Drill</button>
+            <button class="btn-secondary" onclick="resetDrill()">Reset</button>
+        </div>
+    </div>
 
     <div id="drillOutput" class="card" style="display:none;">
-        <div class="metric">📍 <strong>Start Guard:</strong> <span id="startGuard" class="highlight"></span></div>
-        <div class="metric">🎯 <strong>Tactical Focus:</strong> <span id="tacticalFocus" class="highlight"></span></div>
+        <div class="metric">
+            <span>📍 <strong>Start Guard:</strong></span>
+            <span id="startGuard" class="highlight"></span>
+        </div>
+        <div class="metric">
+            <span>🎯 <strong>Tactical Tempo:</strong></span>
+            <span id="tacticalFocus" class="highlight"></span>
+        </div>
         
-        <h3>Sequence:</h3>
+        <h3>Sequence</h3>
         <div id="sequenceList"></div>
         
-        <div class="metric" style="margin-top:15px;">🛡️ <strong>End Guard:</strong> <span id="endGuard" class="highlight"></span></div>
+        <div class="metric" style="margin-top:15px;">
+            <span>🛡️ <strong>End Guard:</strong></span>
+            <span id="endGuard" class="highlight"></span>
+        </div>
+
+        <button class="copy-btn" onclick="copyDrill()">📋 Copy Drill to Clipboard</button>
     </div>
 
     <script>
-        const GUARDS = ["Vom Tag (Right)", "Vom Tag (Left)", "Pflug (Right)", "Pflug (Left)", "Ochs (Right)", "Ochs (Left)", "Alber", "Nebenhut", "Zornhut"];
-        const MASTERCUTS = ["Zornhau", "Krumphau", "Zwerchau", "Schielhau", "Scheitelhau"];
-        const BASIC_STRIKES = ["Oberhau", "Unterhau", "Mittelhau", "Stich"];
-        const FOOTWORK = ["Passing Step Forward", "Gathering Step Forward", "Compass Step Outward", "Passing Step Backward", "Explosive Step"];
-        const OPENINGS = ["High Right", "High Left", "Low Right", "Low Left", "Center / Throat"];
-        const TACTICS = ["Vor (Initiative)", "Indes (Simultaneous)", "Nach (Reactive)"];
+        // Data Structures for Biomechanical Flow
+        const GUARDS = {
+            "Vom Tag (Right)": { side: "R", level: "high" },
+            "Vom Tag (Left)": { side: "L", level: "high" },
+            "Pflug (Right)": { side: "R", level: "low" },
+            "Pflug (Left)": { side: "L", level: "low" },
+            "Ochs (Right)": { side: "R", level: "high" },
+            "Ochs (Left)": { side: "L", level: "high" },
+            "Alber": { side: "C", level: "low" },
+            "Nebenhut (Right)": { side: "R", level: "low" },
+            "Nebenhut (Left)": { side: "L", level: "low" },
+            "Zornhut (Right)": { side: "R", level: "high" }
+        };
 
-        function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+        const STRIKES = {
+            "Oberhau": { validOpenings: ["High Right", "High Left"], endLevel: "low", prefersMastercut: false },
+            "Unterhau": { validOpenings: ["Low Right", "Low Left"], endLevel: "high", prefersMastercut: false },
+            "Mittelhau": { validOpenings: ["High Right", "High Left", "Low Right", "Low Left"], endLevel: "same", prefersMastercut: false },
+            "Stich": { validOpenings: ["Center / Throat", "High Right", "Low Left"], endLevel: "same", prefersMastercut: false },
+            "Zornhau": { validOpenings: ["High Left", "Center / Throat"], endLevel: "low", prefersMastercut: true },
+            "Krumphau": { validOpenings: ["Low Right", "Hands / Flat"], endLevel: "low", prefersMastercut: true },
+            "Zwerchau": { validOpenings: ["High Right", "High Left"], endLevel: "high", prefersMastercut: true },
+            "Schielhau": { validOpenings: ["High Right", "Center / Throat"], endLevel: "high", prefersMastercut: true },
+            "Scheitelhau": { validOpenings: ["Crown / Scalp"], endLevel: "low", prefersMastercut: true }
+        };
+
+        const FOOTWORK_OPTIONS = {
+            "forward": ["Passing Step Forward", "Gathering Step Forward", "Explosive Triangular Step"],
+            "offside": ["Compass Step Outward", "Lateral Step Off-Line", "Triangle Step Left", "Triangle Step Right"],
+            "backward": ["Passing Step Backward", "Withdrawal Step"]
+        };
+
+        const TACTICS = [
+            "Vor (Initiative / Aggressive)", 
+            "Indes (Simultaneous / Intercepting)", 
+            "Nach (Reactive / Counter-Attack)"
+        ];
+
+        function getRandom(arr) { 
+            return arr[Math.floor(Math.random() * arr.length)]; 
+        }
+
+        function getBiomechanicalNextGuard(currentGuardKey, strikeKey) {
+            const current = GUARDS[currentGuardKey] || { side: "R", level: "high" };
+            const strike = STRIKES[strikeKey];
+            
+            // Switch body side due to hip rotation
+            const nextSide = current.side === "R" ? "L" : (current.side === "L" ? "R" : getRandom(["R", "L"]));
+            
+            // Determine level based on strike recovery
+            let nextLevel = strike ? strike.endLevel : "high";
+            if (nextLevel === "same") nextLevel = current.level;
+
+            // Filter guards matching the target biomechanical recovery position
+            const suitableGuards = Object.keys(GUARDS).filter(gKey => {
+                const g = GUARDS[gKey];
+                return (g.side === nextSide || g.side === "C") && g.level === nextLevel;
+            });
+
+            return suitableGuards.length > 0 ? getRandom(suitableGuards) : getRandom(Object.keys(GUARDS));
+        }
+
+        function getContextualFootwork(tactic, stepIndex, totalSteps) {
+            if (tactic.startsWith("Nach") && stepIndex === 0) {
+                return getRandom(FOOTWORK_OPTIONS["backward"]);
+            }
+            if (tactic.startsWith("Indes")) {
+                return getRandom(FOOTWORK_OPTIONS["offside"]);
+            }
+            return getRandom([...FOOTWORK_OPTIONS["forward"], ...FOOTWORK_OPTIONS["offside"]]);
+        }
 
         function generateDrill() {
             const diff = document.getElementById("difficulty").value;
             const count = parseInt(document.getElementById("steps").value);
 
-            document.getElementById("startGuard").innerText = getRandom(GUARDS);
-            document.getElementById("tacticalFocus").innerText = getRandom(TACTICS);
-            document.getElementById("endGuard").innerText = getRandom(GUARDS);
+            const allGuards = Object.keys(GUARDS);
+            let currentGuard = getRandom(allGuards);
+            const startGuard = currentGuard;
+            const tactic = getRandom(TACTICS);
+
+            document.getElementById("startGuard").innerText = startGuard;
+            document.getElementById("tacticalFocus").innerText = tactic;
 
             const seqList = document.getElementById("sequenceList");
             seqList.innerHTML = "";
 
+            const basicKeys = ["Oberhau", "Unterhau", "Mittelhau", "Stich"];
+            const masterKeys = ["Zornhau", "Krumphau", "Zwerchau", "Schielhau", "Scheitelhau"];
+
             for (let i = 0; i < count; i++) {
-                let strike;
-                if (diff === "basic") strike = getRandom(BASIC_STRIKES);
-                else if (diff === "advanced" && Math.random() > 0.2) strike = getRandom(MASTERCUTS);
-                else strike = getRandom([...BASIC_STRIKES, ...MASTERCUTS]);
+                let strikeKey;
+                if (diff === "basic") {
+                    strikeKey = getRandom(basicKeys);
+                } else if (diff === "advanced") {
+                    strikeKey = Math.random() > 0.25 ? getRandom(masterKeys) : getRandom(basicKeys);
+                } else {
+                    strikeKey = getRandom([...basicKeys, ...masterKeys]);
+                }
+
+                const strikeData = STRIKES[strikeKey];
+                const targetOpening = getRandom(strikeData.validOpenings);
+                const footwork = getContextualFootwork(tactic, i, count);
 
                 const div = document.createElement("div");
                 div.className = "step-item";
-                div.innerHTML = `<strong>Step ${i+1}:</strong> ${getRandom(FOOTWORK)} ➔ <span class="highlight">${strike}</span> targeting <em>${getRandom(OPENINGS)}</em>`;
+                div.innerHTML = `
+                    <div class="step-header">Step ${i+1}</div>
+                    <div>${footwork} ➔ <span class="highlight">${strikeKey}</span> targeting <em>${targetOpening}</em></div>
+                `;
                 seqList.appendChild(div);
+
+                // Dynamically update stance for next biomechanical transition
+                currentGuard = getBiomechanicalNextGuard(currentGuard, strikeKey);
             }
 
+            document.getElementById("endGuard").innerText = currentGuard;
             document.getElementById("drillOutput").style.display = "block";
+        }
+
+        function resetDrill() {
+            document.getElementById("drillOutput").style.display = "none";
+            document.getElementById("difficulty").value = "mixed";
+            document.getElementById("steps").value = "3";
+        }
+
+        function copyDrill() {
+            const start = document.getElementById("startGuard").innerText;
+            const tempo = document.getElementById("tacticalFocus").innerText;
+            const end = document.getElementById("endGuard").innerText;
+            
+            const steps = [];
+            document.querySelectorAll(".step-item").forEach((el, index) => {
+                steps.push(`${index + 1}. ${el.innerText.replace(`STEP ${index + 1}\n`, '')}`);
+            });
+
+            const text = `⚔️ KdF Longsword Drill\n-------------------\n📍 Start: ${start}\n🎯 Tempo: ${tempo}\n\nSequence:\n${steps.join('\n')}\n\n🛡️ End: ${end}`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector(".copy-btn");
+                const originalText = btn.innerText;
+                btn.innerText = "✅ Copied!";
+                setTimeout(() => btn.innerText = originalText, 2000);
+            });
         }
     </script>
 </body>
