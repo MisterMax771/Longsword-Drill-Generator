@@ -34,7 +34,7 @@
 
         .header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         h1 { 
@@ -51,12 +51,63 @@
         .card { 
             background: var(--card-bg); 
             border-radius: 12px; 
-            padding: 24px; 
+            padding: 20px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
             border: 1px solid var(--border-color);
         }
 
-        button { 
+        /* Filter Toggle Controls */
+        .filter-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filter-group-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .radio-toolbar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .radio-toolbar input[type="radio"] {
+            display: none;
+        }
+
+        .radio-toolbar label {
+            flex: 1;
+            min-width: 90px;
+            text-align: center;
+            padding: 8px 10px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .radio-toolbar input[type="radio"]:checked + label {
+            background: var(--accent);
+            color: #121212;
+            font-weight: 700;
+            border-color: var(--accent);
+        }
+
+        button.gen-btn { 
             width: 100%;
             padding: 14px; 
             border-radius: 8px; 
@@ -69,16 +120,16 @@
             transition: background 0.2s, transform 0.1s;
         }
 
-        button:hover { 
+        button.gen-btn:hover { 
             background: var(--accent-hover); 
         }
 
-        button:active {
+        button.gen-btn:active {
             transform: scale(0.98);
         }
 
         .prompt-container {
-            margin-top: 25px;
+            margin-top: 20px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -119,12 +170,15 @@
         }
 
         .copy-btn {
+            width: 100%;
             margin-top: 15px;
             background: transparent;
             border: 1px solid var(--border-color);
             color: var(--text-muted);
             font-size: 0.9rem;
             padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
         }
 
         .copy-btn:hover {
@@ -141,7 +195,37 @@
     </div>
 
     <div class="card">
-        <button onclick="generatePrompt()">🎲 Generate Elements </button>
+        <!-- Filter Controls -->
+        <div class="filter-section">
+            <!-- Stance Filter -->
+            <div>
+                <div class="filter-group-label">Stance Pool</div>
+                <div class="radio-toolbar">
+                    <input type="radio" id="guards-basic" name="guardFilter" value="basic" checked>
+                    <label for="guards-basic">4 Primary Guards</label>
+
+                    <input type="radio" id="guards-all" name="guardFilter" value="all">
+                    <label for="guards-all">All Guards</label>
+                </div>
+            </div>
+
+            <!-- Strike Filter -->
+            <div>
+                <div class="filter-group-label">Strikes & Techniques</div>
+                <div class="radio-toolbar">
+                    <input type="radio" id="strike-all" name="strikeFilter" value="all" checked>
+                    <label for="strike-all">All Cuts</label>
+
+                    <input type="radio" id="strike-master" name="strikeFilter" value="mastercuts">
+                    <label for="strike-master">Mastercuts Only</label>
+
+                    <input type="radio" id="strike-basic" name="strikeFilter" value="basic">
+                    <label for="strike-basic">Basic Cuts Only</label>
+                </div>
+            </div>
+        </div>
+
+        <button class="gen-btn" onclick="generatePrompt()">🎲 Generate Creative Prompt</button>
 
         <div id="output" style="display: none;">
             <div class="prompt-container">
@@ -170,17 +254,36 @@
     </div>
 
     <script>
-        const STANCES = [
-            "Vom Tag (Right / High Guard)",
-            "Vom Tag (Left / High Guard)",
-            "Pflug (Right / Plow)",
-            "Pflug (Left / Plow)",
-            "Ochs (Right / Ox)",
-            "Ochs (Left / Ox)",
-            "Alber (Fool's Guard)",
-            "Nebenhut (Right / Tail)",
-            "Nebenhut (Left / Tail)",
-            "Zornhut (Wrath Guard)"
+        // Stance Datasets
+        const BASIC_GUARDS = [
+            "Vom Tag (High Guard)",
+            "Pflug (Plow Guard)",
+            "Ochs (Ox Guard)",
+            "Alber (Fool's Guard)"
+        ];
+
+        const OTHER_GUARDS = [
+            "Nebenhut (Tail Guard)",
+            "Zornhut (Wrath Guard)",
+            "Eisenport (Iron Door)",
+            "Schrankhut (Barred Guard)",
+            "Wechsel (Change Guard)"
+        ];
+
+        // Strike Datasets
+        const BASIC_STRIKES = [
+            "Oberhau (High Cut)",
+            "Unterhau (Low Cut)",
+            "Mittelhau (Horizontal Cut)",
+            "Stich (Thrust)"
+        ];
+
+        const MASTERCUTS = [
+            "Zornhau (Wrath Cut)",
+            "Krumphau (Crooked Cut)",
+            "Zwerchau (Thwart Cut)",
+            "Schielhau (Squinting Cut)",
+            "Scheitelhau (Scalp Cut)"
         ];
 
         const FOOTWORK = [
@@ -193,26 +296,40 @@
             "Explosive Sprint / Lunging Step"
         ];
 
-        const STRIKES = [
-            "Zornhau (Wrath Cut)",
-            "Krumphau (Crooked Cut)",
-            "Zwerchau (Thwart Cut)",
-            "Schielhau (Squinting Cut)",
-            "Scheitelhau (Scalp Cut)",
-            "Oberhau (High Cut)",
-            "Unterhau (Low Cut)",
-            "Mittelhau (Horizontal Cut)",
-            "Stich (Thrust)"
-        ];
-
         function getRandom(arr) {
             return arr[Math.floor(Math.random() * arr.length)];
         }
 
         function generatePrompt() {
-            document.getElementById("stanceVal").innerText = getRandom(STANCES);
+            // Determine Guard Pool
+            const guardSelection = document.querySelector('input[name="guardFilter"]:checked').value;
+            let currentGuards = [...BASIC_GUARDS];
+            if (guardSelection === "all") {
+                currentGuards = [...BASIC_GUARDS, ...OTHER_GUARDS];
+            }
+
+            // Add side orientation (Right / Left)
+            let chosenStance = getRandom(currentGuards);
+            if (chosenStance !== "Alber" && chosenStance !== "Eisenport") {
+                chosenStance += ` (${getRandom(["Right", "Left"])})`;
+            }
+
+            // Determine Strike Pool
+            const strikeSelection = document.querySelector('input[name="strikeFilter"]:checked').value;
+            let currentStrikes = [];
+            
+            if (strikeSelection === "mastercuts") {
+                currentStrikes = MASTERCUTS;
+            } else if (strikeSelection === "basic") {
+                currentStrikes = BASIC_STRIKES;
+            } else {
+                currentStrikes = [...BASIC_STRIKES, ...MASTERCUTS];
+            }
+
+            // Set Values
+            document.getElementById("stanceVal").innerText = chosenStance;
             document.getElementById("footworkVal").innerText = getRandom(FOOTWORK);
-            document.getElementById("strikeVal").innerText = getRandom(STRIKES);
+            document.getElementById("strikeVal").innerText = getRandom(currentStrikes);
 
             document.getElementById("output").style.display = "block";
         }
